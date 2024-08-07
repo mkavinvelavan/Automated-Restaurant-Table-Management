@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <style>
+        :root {
+            --background: #f2c170;
+            --color: #ffffff;
+            --primary-color: #0f3460;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--background);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .city-card {
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            text-align: center;
+            -webkit-animation: roll-in-left 0.6s ease-out both;
+	        animation: roll-in-left 0.6s ease-out both;
+            position: relative;
+            width: 300px;
+            height: 400px;
+            z-index: -1000000;
+            overflow: hidden;
+            /* color: black;  */
+        }
+         .city-card::before{
+            content: '';
+            position: absolute;
+            width:100px;
+            height:140%;
+            z-index: -1000000;
+            background-color: black;
+            box-shadow: 0 0 20px rgb(8,8,8);
+            animation: animate 4s linear infinite;
+        }
+        .city-card::after{
+            content: '';
+            position: absolute;
+            inset: 10px;
+            z-index: -1000000;
+            background-color: #f69414;
+            border-radius: 16px;
+            
+        }
+        @keyframes animate{
+            0%{
+                transform: rotate(0deg);
+            }
+            100%{
+                transform: rotate(360deg);
+            }
+        } 
+        .city-name {
+            font-size: 24px;
+            padding-top: 150px;
+            color: white;
+        }
+        .table-no {
+            font-size: 20px;
+            color: black;
+            padding-bottom: 10px;
+        }
+        @-webkit-keyframes roll-in-left {
+  0% {
+    -webkit-transform: translateX(-800px) rotate(-540deg);
+            transform: translateX(-800px) rotate(-540deg);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateX(0) rotate(0deg);
+            transform: translateX(0) rotate(0deg);
+    opacity: 1;
+  }
+}
+@keyframes roll-in-left {
+  0% {
+    -webkit-transform: translateX(-800px) rotate(-540deg);
+            transform: translateX(-800px) rotate(-540deg);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateX(0) rotate(0deg);
+            transform: translateX(0) rotate(0deg);
+    opacity: 1;
+  }
+}
+    </style>
+</head>
+<body>
+    <div class="city-card" id="latest-city">
+        <h1 style="color: #ffffff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif ;">WELCOME</h1>
+        <h2 class="city-name">Loading...</h2>
+        <p class="table-no">Table No: <span id="table-no">Loading...</span></p>
+        
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-analytics-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
+    
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAQUooRO3S4xtIsVnNozzzwmnTwi7tVSDs",
+            authDomain: "restaurant-5fe8f.firebaseapp.com",
+            projectId: "restaurant-5fe8f",
+            storageBucket: "restaurant-5fe8f.appspot.com",
+            messagingSenderId: "695622765098",
+            appId: "1:695622765098:web:e5fb3435a1b56696c0d153",
+            measurementId: "G-4FCMLR15FW"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Retrieve the latest city document
+        db.collection("UserDisplay")
+            .orderBy("timestamp", "desc")
+            .limit(1)
+            .onSnapshot((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    const cityName = doc.data().name;
+                    const tableNo = doc.data().table_no;
+                    document.getElementById("latest-city").innerHTML = `
+                        <h1 style="color: #ffffff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif ;">WELCOME</h1>
+                        <h2 class="city-name">${cityName}</h2>
+                        <p class="table-no">Table No: <span>${tableNo}</span></p>
+                        <img src="img1.png">
+                        
+                    `;
+                    
+                });
+            });
+    </script>
+
+</body>
+</html>

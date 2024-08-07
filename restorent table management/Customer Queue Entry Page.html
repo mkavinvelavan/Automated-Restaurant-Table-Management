@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>User Page</title>
+  <link rel="stylesheet" href="stylesa.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+</head>
+<body>
+<body>
+    <iframe src="loading_page.html" style="display: none; width: 100%; z-index: 9999;height:100vh;position: fixed;top: 0;
+    left: 0;"></iframe>
+  <section class="container">
+    <div class="login-container">
+      <div class="circle circle-one"></div>
+      <div class="form-container">
+        <img src="img1.png" alt="illustration" class="illustration" />
+        <h1 class="opacity">Enter,<br>Enjoy!!!</h1>
+        <form>
+          <input type="text" required placeholder="Name" id="name" />
+          <select id="table">
+            <option value="" disabled selected hidden required>Select Occupancy</option>
+            <option value="2">2</option>
+            <option value="4">4</option>
+            <option value="6">6</option>
+          </select>
+          <button class="opacity" id="btnSubmit">SUBMIT</button>
+        </form>
+      </div>
+      <div class="circle circle-two"></div>
+    </div>
+    <div class="theme-btn-container"></div>
+  </section>
+  <div class="name-display">{{name}}'s Table is Ready</div>
+</body>
+<script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwoOPbVWviqguId-R7yP6OHeFx2a7DiXyCxcs5i_RYlsSZKC6Yu5tGtF9-YEP-gSylxkA/exec';
+    const success = document.getElementById('success');
+
+    document.getElementById('btnSubmit').addEventListener('click', function(event) {
+    event.preventDefault(); // Prevent default form submission
+
+    // Show the loading screen
+    document.querySelector('iframe').style.display = 'block';
+
+    const name = document.getElementById('name').value.trim();
+    const seater = document.getElementById('table').value.trim();
+
+    if (name === '' || seater === '') {
+        alert('Please fill in all fields.');
+        document.querySelector('iframe').style.display = 'none';
+        document.getElementById('name').value = '';
+        document.getElementById('table').value = '';
+        return; // You can use a more visually appealing method like toastr here
+ // Stop form submission
+    }
+
+    // Construct the form data
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('Seater', seater);
+
+    // Perform the form submission
+    fetch(scriptURL, { method: 'POST', body: formData })
+        .then(response => {
+            document.querySelector('iframe').style.display = 'none';
+
+            console.log('Form submitted successfully:', response);
+
+            
+            // Show success message
+            // alert('Data submitted successfully!');
+            $(function(){
+              toastr.success("Added to the queue");
+            });
+            // Reset the form fields
+            document.getElementById('name').value = '';
+            document.getElementById('table').value = '';
+        })
+        .catch(error => {
+            console.error('Error submitting form:', error);
+            alert('An error occurred while submitting the form. Please try again later.');
+
+            // Hide the loading screen
+            document.querySelector('iframe').style.display = 'none';
+        });
+});
+
+</script>
+
+</body>
+</html>
+
+
